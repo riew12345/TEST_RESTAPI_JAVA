@@ -8,7 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.wongsapat.testrestapi.Entity.PurchaseOrderEntity;
+import com.wongsapat.testrestapi.Exception.ResourceNotFoundException;
 import com.wongsapat.testrestapi.Models.PurchaseOrderHeaderDTO;
+import com.wongsapat.testrestapi.Payload.ApiResponse;
 import com.wongsapat.testrestapi.Services.PurchaseOrderService;
 import com.wongsapat.testrestapi.Utils.PurchaseOrderMapper;
 
@@ -37,16 +39,16 @@ public class PurchaseOrderController {
         if (purchaseOrder != null) {
             return PurchaseOrderMapper.mapHeaderEntityToDTO(purchaseOrder);
         } else {
-            throw new RuntimeException("PurchaseOrder not found with id: " + docEntry);
+            throw new ResourceNotFoundException("PurchaseOrder not found with id: " + docEntry);
         }
     }
 
-
     @PostMapping("/PO")
-    public ResponseEntity<PurchaseOrderEntity> insertPO(@RequestBody PurchaseOrderHeaderDTO entity) {
-        PurchaseOrderEntity createOrder = poService.createPurchaseOrder(entity);
-        return new ResponseEntity<>(createOrder, HttpStatus.CREATED);
-    }
+        public ResponseEntity<ApiResponse<PurchaseOrderHeaderDTO>> insertPO(@RequestBody PurchaseOrderHeaderDTO dto) {
+            PurchaseOrderEntity savedEntity = poService.createPurchaseOrder(dto);
+            PurchaseOrderHeaderDTO responseDTO = PurchaseOrderMapper.mapHeaderEntityToDTO(savedEntity);
+            return ResponseEntity.ok(new ApiResponse<>("success", responseDTO));
+        }
 
     @PutMapping("/PO/{docEntry}")
     public ResponseEntity<PurchaseOrderEntity> updateEmployee(@PathVariable Integer docEntry,@RequestBody PurchaseOrderHeaderDTO entity) {

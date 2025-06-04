@@ -1,6 +1,8 @@
 package com.wongsapat.testrestapi.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PurchaseOrderDetailDTO {
     private String docEntry;
     public Integer lineNum;

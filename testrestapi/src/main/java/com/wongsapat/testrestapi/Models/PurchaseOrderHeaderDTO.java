@@ -1,8 +1,11 @@
 package com.wongsapat.testrestapi.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.time.LocalDateTime;
 import java.util.List;
 
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PurchaseOrderHeaderDTO  {
     private String docEntry;
     public String docNum;
