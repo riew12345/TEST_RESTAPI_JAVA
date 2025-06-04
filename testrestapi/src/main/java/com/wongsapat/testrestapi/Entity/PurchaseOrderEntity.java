@@ -6,6 +6,10 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import java.util.Objects;
 
 @Entity
@@ -45,6 +49,8 @@ public class PurchaseOrderEntity {
     private LocalDateTime updatedDate;
 
     @OneToMany(mappedBy = "opor", cascade = CascadeType.ALL, orphanRemoval = true)
+
+    @JsonManagedReference
     private Set<PurchaseOrderDetail> por1Lines = new HashSet<>();
 
     public PurchaseOrderEntity() {
@@ -183,12 +189,13 @@ public class PurchaseOrderEntity {
         @Column(name = "Price", nullable = false)
         private Double price = 0.0;
 
-        @Column(name = "LineTotal", insertable = false, updatable = false, nullable = false)
+        @Column(name = "LineTotal", nullable = false)
         private Double lineTotal = 0.0;
 
         @ManyToOne
         @MapsId("docEntry")
         @JoinColumn(name = "DocEntry")
+        @JsonBackReference
         private PurchaseOrderEntity opor;
 
         public PurchaseOrderDetail() {}

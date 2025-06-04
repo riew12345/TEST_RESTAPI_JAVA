@@ -4,11 +4,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.wongsapat.testrestapi.Entity.PurchaseOrderEntity;
+import com.wongsapat.testrestapi.Models.PurchaseOrderDetailDTO;
 import com.wongsapat.testrestapi.Models.PurchaseOrderHeaderDTO;
 import com.wongsapat.testrestapi.Respository.PurchaseOrderRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PurchaseOrderService {
@@ -18,6 +20,33 @@ public class PurchaseOrderService {
     public PurchaseOrderService(PurchaseOrderRepository poRepo) {
         this.poRepo = poRepo;
     }
+
+    public PurchaseOrderHeaderDTO convertToResponseDTO(PurchaseOrderEntity po) {
+        PurchaseOrderHeaderDTO dto = new PurchaseOrderHeaderDTO();
+        dto.setDocEntry(String.valueOf(po.getDocEntry())); // แปลง Integer → String
+        dto.setDocNum(po.getDocNum());
+        dto.setDocDate(po.getDocDate());
+        dto.setCardCode(po.getCardCode());
+        dto.setCardName(po.getCardName());
+        dto.setDocStatus(po.getDocStatus());
+        dto.setComments(po.getComments());
+
+        List<PurchaseOrderDetailDTO> detailDTOs = po.getPor1Lines().stream().map(detail -> {
+            PurchaseOrderDetailDTO detailDTO = new PurchaseOrderDetailDTO();
+            detailDTO.setDocEntry(String.valueOf(po.getDocEntry())); // ใช้ docEntry จาก header
+            detailDTO.setLineNum(detail.getLineNum());
+            detailDTO.setItemCode(detail.getItemCode());
+            detailDTO.setDscription(detail.getDscription());
+            detailDTO.setQuantity(detail.getQuantity());
+            detailDTO.setPrice(detail.getPrice());
+            return detailDTO;
+        }).collect(Collectors.toList());
+
+        dto.setPor1Lines(detailDTOs);
+
+        return dto;
+    }
+
 
     public List<PurchaseOrderEntity> getAllPurchaseOrders() {
         return poRepo.findAll();
@@ -99,5 +128,4 @@ public class PurchaseOrderService {
     public void deletePurchaseOrder(Integer docEntry) {
         poRepo.deleteById(docEntry);
     }
-
 }

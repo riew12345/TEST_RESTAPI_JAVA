@@ -1,6 +1,7 @@
 package com.wongsapat.testrestapi.Controllers;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import com.wongsapat.testrestapi.Entity.PurchaseOrderEntity;
 import com.wongsapat.testrestapi.Models.PurchaseOrderHeaderDTO;
 import com.wongsapat.testrestapi.Services.PurchaseOrderService;
+import com.wongsapat.testrestapi.Utils.PurchaseOrderMapper;
 
 
 @RestController
@@ -22,19 +24,23 @@ public class PurchaseOrderController {
     }
 
     @GetMapping("/PO")
-    public List<PurchaseOrderEntity> getAllPO() {
-        return poService.getAllPurchaseOrders();
+    public List<PurchaseOrderHeaderDTO> getAllPurchaseOrder() {
+        List<PurchaseOrderEntity> entities = poService.getAllPurchaseOrders();
+        return entities.stream()
+                    .map(PurchaseOrderMapper::mapHeaderEntityToDTO)
+                    .collect(Collectors.toList());
     }
 
     @GetMapping("/PO/{docEntry}")
-    public PurchaseOrderEntity getEmployee(@PathVariable int docEntry) {
+    public PurchaseOrderHeaderDTO getPurchaseOrder(@PathVariable int docEntry) {
         PurchaseOrderEntity purchaseOrder = poService.getPurchaseOrderById(docEntry);
         if (purchaseOrder != null) {
-            return purchaseOrder;
+            return PurchaseOrderMapper.mapHeaderEntityToDTO(purchaseOrder);
         } else {
             throw new RuntimeException("PurchaseOrder not found with id: " + docEntry);
         }
     }
+
 
     @PostMapping("/PO")
     public ResponseEntity<PurchaseOrderEntity> insertPO(@RequestBody PurchaseOrderHeaderDTO entity) {

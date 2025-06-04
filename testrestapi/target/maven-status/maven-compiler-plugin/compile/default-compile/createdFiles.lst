@@ -5,6 +5,7 @@ com\wongsapat\testrestapi\Interface\PPurchaseOrderInterface.class
 com\wongsapat\testrestapi\Controllers\CustomerController.class
 com\wongsapat\testrestapi\Respository\CustomerRepository.class
 com\wongsapat\testrestapi\Controllers\PurchaseOrderController.class
+com\wongsapat\testrestapi\Utils\PurchaseOrderMapper.class
 com\wongsapat\testrestapi\Entity\CustomerEntity.class
 com\wongsapat\testrestapi\Services\CustomerService.class
 com\wongsapat\testrestapi\Services\PurchaseOrderService.class

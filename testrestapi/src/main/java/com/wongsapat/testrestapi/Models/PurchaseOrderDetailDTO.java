@@ -2,12 +2,21 @@ package com.wongsapat.testrestapi.Models;
 
 
 public class PurchaseOrderDetailDTO {
+    private String docEntry;
     public Integer lineNum;
     public String itemCode;
     public String dscription;
     public Integer quantity;
     public Double price;
     public Double lineTotal;
+
+    public String getDocEntry() {
+        return docEntry;
+    }
+
+    public void setDocEntry(String docEntry) {
+        this.docEntry = docEntry;
+    }
 
     public Integer getLineNum() {
         return lineNum;
